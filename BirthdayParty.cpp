@@ -9,12 +9,19 @@
 
 #define NUM_GUESTS 100
 
+// Keep track of if a guest has been picked yet
 std::vector<bool> guestsPicked(NUM_GUESTS);
-std::mutex mutex;
-bool isCupcakeThere = true;
 int numGuestsPicked = 0;
+bool isCupcakeThere = true;
+
+// Avoid race conditions
+std::mutex mutex;
+
+// Current guest in the labyrinth
 int activeThreadID = 0;
 
+// Random integer generator, inclusive of min and max
+// Used for randomly choosing next guest
 int generateRandomNumber(int min, int max)
 {
     std::random_device rd;
@@ -38,11 +45,11 @@ void checkCupcake()
             if (isCupcakeThere && !guestsPicked[0])
             {
                 numGuestsPicked++;
-                guestsPicked[activeThreadID] = true;
+                guestsPicked[0] = true;
                 std::cout << "Guest 0 ate the cupcake" << std::endl;
             }
-            // Cupcake only there if someone's first time eating it
-            // Update count and replace cupcake
+            // Cupcake will only be eaten if it was someone's first time eating it
+            // Manager must update count and replace cupcake
             if (!isCupcakeThere)
             {
                 numGuestsPicked++;
@@ -60,7 +67,7 @@ void visitLabyrinth(int currentThreadID)
     {
         mutex.lock();
 
-        // If cupcake is there and we haven't eaten it before, eat it
+        // If cupcake is there and current guest has not eaten it before, eat it
         if (activeThreadID == currentThreadID && isCupcakeThere && !guestsPicked[currentThreadID])
         {
             guestsPicked[activeThreadID] = true;
@@ -76,11 +83,13 @@ int main(void)
 {
     auto start = std::chrono::high_resolution_clock::now();
 
+    // Create thread for every guest
     std::vector<std::thread> threads(NUM_GUESTS);
 
-    // First thread is the "manager"
+    // Initialize first thread/guest as the "manager"
     threads[0] = std::thread(checkCupcake);
 
+    // Every other thread/guest will be a normal visitor
     for (int i = 1; i < NUM_GUESTS; i++)
     {
         threads[i] = std::thread(visitLabyrinth, i);

@@ -9,6 +9,10 @@
 
 #define NUM_GUESTS 100
 
+int generateRandomNumber(int, int);
+void checkCupcake();
+void visitLabyrinth(int);
+
 // Keep track of if a guest has been picked yet
 std::vector<bool> guestsPicked(NUM_GUESTS);
 int numGuestsPicked = 0;
@@ -18,7 +22,10 @@ bool isCupcakeThere = true;
 std::mutex mutex;
 
 // Current guest in the labyrinth
-int activeThreadID = 0;
+// Initialized to first guest picked
+int activeThreadID = generateRandomNumber(0, NUM_GUESTS - 1);
+// That first person picked will be the manager
+int managerID = activeThreadID;
 
 // Random integer generator, inclusive of min and max
 // Used for randomly choosing next guest
@@ -38,15 +45,15 @@ void checkCupcake()
         mutex.lock();
 
         // First person chosen is the "manager"
-        if (activeThreadID == 0)
+        if (activeThreadID == managerID)
         {
             // Account for first person being chosen not eating yet
             // They eat and immediately replace cupcake
-            if (isCupcakeThere && !guestsPicked[0])
+            if (isCupcakeThere && !guestsPicked[managerID])
             {
                 numGuestsPicked++;
-                guestsPicked[0] = true;
-                std::cout << "Guest 0 ate the cupcake" << std::endl;
+                guestsPicked[managerID] = true;
+                std::cout << "Guest " << managerID << " ate the cupcake" << std::endl;
             }
             // Cupcake will only be eaten if it was someone's first time eating it
             // Manager must update count and replace cupcake
@@ -86,19 +93,24 @@ int main(void)
     // Create thread for every guest
     std::vector<std::thread> threads(NUM_GUESTS);
 
-    // Initialize first thread/guest as the "manager"
-    threads[0] = std::thread(checkCupcake);
+    // Initialize chosen manager as the cupcake checker
+    std::cout << "Guest " << managerID << " is the manager" << std::endl;
+    threads[managerID] = std::thread(checkCupcake);
 
     // Every other thread/guest will be a normal visitor
-    for (int i = 1; i < NUM_GUESTS; i++)
+    for (int i = 0; i < NUM_GUESTS; i++)
     {
+        if (i == managerID)
+        {
+            continue;
+        }
         threads[i] = std::thread(visitLabyrinth, i);
     }
 
     // Keep choosing new people until everyone has been chosen
     while (numGuestsPicked < NUM_GUESTS)
     {
-        activeThreadID = generateRandomNumber(0, NUM_GUESTS);
+        activeThreadID = generateRandomNumber(0, NUM_GUESTS - 1);
     }
 
     // Wait for all threads to finish

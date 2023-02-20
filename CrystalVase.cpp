@@ -9,6 +9,9 @@
 
 #define NUM_GUESTS 100
 
+int generateRandomNumber(int, int);
+void viewVase(int);
+
 // Keep track of if a guest has viewed the vase yet
 std::vector<bool> guestsPicked(NUM_GUESTS);
 int numGuestsViewed = 0;
@@ -18,7 +21,7 @@ bool isRoomAvailable = true;
 std::mutex mutex;
 
 // Current guest in the room
-int activeThreadID = 0;
+int activeThreadID = generateRandomNumber(0, NUM_GUESTS - 1);
 
 // Random integer generator, inclusive of min and max
 // Used for randomly choosing next guest
@@ -72,7 +75,7 @@ int main(void)
     // Keep choosing new people until everyone has been chosen
     while (numGuestsViewed < NUM_GUESTS)
     {
-        activeThreadID = generateRandomNumber(0, NUM_GUESTS);
+        activeThreadID = generateRandomNumber(0, NUM_GUESTS - 1);
     }
     
     // Wait for all threads to finish

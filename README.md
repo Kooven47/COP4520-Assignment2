@@ -1,6 +1,5 @@
 # COP4520 Assignment 2
-This project is a C++ implementation of a parallel primality tester using OpenMP.
-It tests numbers from 1 to 10^8 and uses 8 threads.
+This project is a C++ implementation using std::thread of the problems below.
 
 ## Problem 1: Minotaur’s Birthday Party (50 points) 
 The Minotaur invited N guests to his birthday party. When the guests arrived, he made 
@@ -32,7 +31,20 @@ g++ -o BirthdayParty -pthread BirthdayParty.cpp
 <br> ./BirthdayParty
 
 ## Proof of Correctness, Efficiency, and Experimental Evaluation
-TODO
+My approach:
+Create N (in my case, N = 100) threads, with each thread representing a guest. 
+We will keep randomly choosing guests to enter the labyrinth. The first guest chosen will be assigned as the manager. Their responsibility will be to keep the counter in their head of how many guests have eaten the cupcake. Every guest's responsibility (including the manager) will be to remember if they have eaten a cupcake before, and if not, eat it when they get picked if one is available. When the manager is picked, if the cupcake is not available, they will update their counter (as this means someone who has not eaten the cupcake before, has) and replace the cupcake for the next unique quest to eat. Once the manager has updated their count to reach N, the program ends.
+
+For RNG, I used the Mersenne Twister algorithm due to [being faster, not compiler dependent, and less prone to bias compared to rand()](https://codeforces.com/blog/entry/61587?locale=en).
+
+For N = 10:
+<br> For N = 20:
+<br> For N = 50:
+<br> For N = 100:
+<br> For N = 200:
+<br> For N = 500:
+
+The correctness was shown in class as this is very similar to one of the prisoner problems we went over during lecture.
 
 ## Problem 2: Minotaur’s Crystal Vase (50 points) 
 The Minotaur decided to show his favorite crystal vase to his guests in a dedicated 
@@ -64,4 +76,15 @@ g++ -o CrystalVase -pthread CrystalVase.cpp
 <br> ./CrystalVase
 
 ## Proof of Correctness, Efficiency, and Experimental Evaluation
-TODO
+My approach: I used strategy 2, with a boolean value representing the sign. The advantages are ease of code compared to strategy 3, ordered/organized viewing of the vase compared to strategy 1, and wasting less of the guests time since they know when the viewing room is not available. The disadvantages are that guests can go into the showroom multiple times and guests don't know when they will be able to view the vase (compared to strategy 3 which does). Guests (which are represented by a thread) are randomly chosen to view the vase, marking the room as unavailable while they view the vase for a random number of time. After viewing it for the first time, that guest is marked as having seen the vase, with a counter variable increasing. The program terminates once the counter reaches N, similar to the previous problem just without one of the threads being a counter.
+
+I used the same RNG for this problem as the birthday party problem.
+
+For N = 10:
+<br> For N = 20:
+<br> For N = 50:
+<br> For N = 100:
+<br> For N = 200:
+<br> For N = 500:
+
+The correctness of this problem can be shown by its incredible similarity to the previous problem.

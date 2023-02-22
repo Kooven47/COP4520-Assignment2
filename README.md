@@ -37,13 +37,13 @@ We will keep randomly choosing guests to enter the labyrinth. The first guest ch
 
 For RNG, I used the Mersenne Twister algorithm due to [being faster, not compiler dependent, and less prone to bias compared to rand()](https://codeforces.com/blog/entry/61587?locale=en).
 
-For N = 10:
-<br> For N = 20:
-<br> For N = 50:
-<br> For N = 100:
-<br> For N = 200:
-<br> For N = 500:
-
+Runtimes averaged over ten trials
+<br> For N = 10: 5.6ms
+<br> For N = 20: 34ms
+<br> For N = 50: 486.6ms
+<br> For N = 100: 3419.2ms
+<br> For N = 250: 50215.7ms
+<br> The time taken between each guest was mostly consistent throughout the whole program, and the range of times taken throughout the ten trials was small.
 The correctness was shown in class as this is very similar to one of the prisoner problems we went over during lecture.
 
 ## Problem 2: Minotaur’s Crystal Vase (50 points) 
@@ -80,11 +80,12 @@ My approach: I used strategy 2, with a boolean value representing the sign. The 
 
 I used the same RNG for this problem as the birthday party problem.
 
-For N = 10:
-<br> For N = 20:
-<br> For N = 50:
-<br> For N = 100:
-<br> For N = 200:
-<br> For N = 500:
+Runtimes averaged over ten trials
+<br> For N = 10: 829ms
+<br> For N = 20: 2143.1ms
+<br> For N = 50: 6094.7ms
+<br> For N = 100: 18931.4ms
+<br> For N = 250: 45842.6ms
+<br> The time taken between each guest was not consistent throughout the whole program, as it took significantly longer time as the program progressed and unique guests were less likely to show up at the vase. The range of times taken throughout the ten trials was large for all N, especially compared to the birthday party problem. Additionally this program took significantly longer to terminate compared to the birthday party problem except for N = 250.
 
 The correctness of this problem can be shown by its incredible similarity to the previous problem.

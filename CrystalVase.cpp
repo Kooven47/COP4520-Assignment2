@@ -43,8 +43,11 @@ void viewVase(int currentThreadID)
         if (activeThreadID == currentThreadID && isRoomAvailable)
         {
             isRoomAvailable = false;
+
+            // Simulate viewing the vase (even if for short amount of time)
             int viewingTime = generateRandomNumber(10, 50);
             std::this_thread::sleep_for(std::chrono::milliseconds(viewingTime));
+
             isRoomAvailable = true;
 
             // Check if this is the first time the guest has viewed the vase
@@ -52,7 +55,7 @@ void viewVase(int currentThreadID)
             {
                 numGuestsViewed++;
                 guestsPicked[currentThreadID] = true;
-                std::cout << "Guest " << currentThreadID << " is viewing the vase for the first time" << std::endl;
+                std::cout << "Guest " << currentThreadID << " viewed the vase for the first time" << std::endl;
             }
         }
 
@@ -79,7 +82,7 @@ int main(void)
     }
     
     // Wait for all threads to finish
-    for (auto& thread : threads)
+    for (auto& thread: threads)
     {
         thread.join();
     }

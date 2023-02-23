@@ -47,6 +47,10 @@ void checkCupcake()
         // First person chosen is the "manager"
         if (activeThreadID == managerID)
         {
+            // Simulate visiting the labyrinth (even if for short amount of time)
+            int visitingTime = generateRandomNumber(10, 50);
+            std::this_thread::sleep_for(std::chrono::milliseconds(visitingTime));
+
             // Account for first person being chosen not eating yet
             // They eat and immediately replace cupcake
             if (isCupcakeThere && !guestsPicked[managerID])
@@ -77,6 +81,10 @@ void visitLabyrinth(int currentThreadID)
         // If cupcake is there and current guest has not eaten it before, eat it
         if (activeThreadID == currentThreadID && isCupcakeThere && !guestsPicked[currentThreadID])
         {
+            // Simulate visiting the labyrinth (even if for short amount of time)
+            int visitingTime = generateRandomNumber(10, 50);
+            std::this_thread::sleep_for(std::chrono::milliseconds(visitingTime));
+
             guestsPicked[activeThreadID] = true;
             isCupcakeThere = false;
             std::cout << "Guest " << currentThreadID << " ate the cupcake" << std::endl;
@@ -114,7 +122,7 @@ int main(void)
     }
 
     // Wait for all threads to finish
-    for (auto& thread : threads)
+    for (auto& thread: threads)
     {
         thread.join();
     }

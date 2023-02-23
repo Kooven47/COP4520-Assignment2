@@ -37,12 +37,12 @@ We will keep randomly choosing guests to enter the labyrinth. The first guest ch
 
 For RNG, I used the Mersenne Twister algorithm due to [being faster, not compiler dependent, and less prone to bias compared to rand()](https://codeforces.com/blog/entry/61587?locale=en).
 
-Runtimes averaged over ten trials
-<br> For N = 10: 5.6ms
-<br> For N = 20: 34ms
-<br> For N = 50: 486.6ms
-<br> For N = 100: 3419.2ms
-<br> For N = 250: 50215.7ms
+Runtimes averaged over ten trials on my computer:
+<br> For N = 10: 595.6ms
+<br> For N = 20: 1237.5ms
+<br> For N = 50: 3505.7ms
+<br> For N = 100: 9286.1ms
+<br> For N = 250: 70592.1ms
 <br> The time taken between each guest was mostly consistent throughout the whole program, and the range of times taken throughout the ten trials was small.
 The correctness was shown in class as this is very similar to one of the prisoner problems we went over during lecture.
 
@@ -80,7 +80,7 @@ My approach: I used strategy 2, with a boolean value representing the sign. The 
 
 I used the same RNG for this problem as the birthday party problem.
 
-Runtimes averaged over ten trials
+Runtimes averaged over ten trials on my computer:
 <br> For N = 10: 829ms
 <br> For N = 20: 2143.1ms
 <br> For N = 50: 6094.7ms

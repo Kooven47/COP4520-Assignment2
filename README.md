@@ -32,7 +32,7 @@ g++ -o BirthdayParty -pthread BirthdayParty.cpp
 
 ## Proof of Correctness, Efficiency, and Experimental Evaluation
 My approach:
-Create N (in my case, N = 100) threads, with each thread representing a guest. 
+Create N threads, with each thread representing a guest. 
 We will keep randomly choosing guests to enter the labyrinth. The first guest chosen will be assigned as the manager. Their responsibility will be to keep the counter in their head of how many guests have eaten the cupcake. Every guest's responsibility (including the manager) will be to remember if they have eaten a cupcake before, and if not, eat it when they get picked if one is available. When the manager is picked, if the cupcake is not available, they will update their counter (as this means someone who has not eaten the cupcake before, has) and replace the cupcake for the next unique quest to eat. Once the manager has updated their count to reach N, the program ends.
 
 For RNG, I used the Mersenne Twister algorithm due to [being faster, not compiler dependent, and less prone to bias compared to rand()](https://codeforces.com/blog/entry/61587?locale=en).
@@ -44,7 +44,8 @@ Runtimes averaged over ten trials on my computer:
 <br> For N = 100: 9286.1ms
 <br> For N = 250: 70592.1ms
 <br> The time taken between each guest was mostly consistent throughout the whole program, and the range of times taken throughout the ten trials was small.
-The correctness was shown in class as this is very similar to one of the prisoner problems we went over during lecture.
+
+The correctness was shown in class as this is very similar to one of the prisoner problems we went over during lecture. The correctness is also shown with the counter displaying the correct value (N) upon program termination.
 
 ## Problem 2: Minotaur’s Crystal Vase (50 points) 
 The Minotaur decided to show his favorite crystal vase to his guests in a dedicated 
@@ -88,4 +89,4 @@ Runtimes averaged over ten trials on my computer:
 <br> For N = 250: 45842.6ms
 <br> The time taken between each guest was not consistent throughout the whole program, as it took significantly longer time as the program progressed and unique guests were less likely to show up at the vase. The range of times taken throughout the ten trials was large for all N, especially compared to the birthday party problem. Additionally this program took significantly longer to terminate compared to the birthday party problem except for N = 250.
 
-The correctness of this problem can be shown by its incredible similarity to the previous problem.
+The correctness of this problem can be shown by its incredible similarity to the previous problem, as well as the counter displaying the correct value (N) upon program termination.

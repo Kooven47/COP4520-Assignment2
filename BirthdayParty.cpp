@@ -23,9 +23,9 @@ std::mutex mutex;
 
 // Current guest in the labyrinth
 // Initialized to first guest picked
-int activeThreadID = generateRandomNumber(0, NUM_GUESTS - 1);
+int guestInLabyrinth = generateRandomNumber(0, NUM_GUESTS - 1);
 // That first person picked will be the manager
-int managerID = activeThreadID;
+int manager = guestInLabyrinth;
 
 // Random integer generator, inclusive of min and max
 // Used for randomly choosing next guest
@@ -45,7 +45,7 @@ void checkCupcake()
         mutex.lock();
 
         // First person chosen is the "manager"
-        if (activeThreadID == managerID)
+        if (guestInLabyrinth == manager)
         {
             // Simulate visiting the labyrinth (even if for short amount of time)
             int visitingTime = generateRandomNumber(10, 50);
@@ -53,11 +53,11 @@ void checkCupcake()
 
             // Account for first person being chosen not eating yet
             // They eat and immediately replace cupcake
-            if (isCupcakeThere && !guestsPicked[managerID])
+            if (isCupcakeThere && !guestsPicked[manager])
             {
                 numGuestsPicked++;
-                guestsPicked[managerID] = true;
-                std::cout << "Guest " << managerID << " ate the cupcake" << std::endl;
+                guestsPicked[manager] = true;
+                std::cout << "Guest " << manager << " ate the cupcake" << std::endl;
             }
             // Cupcake will only be eaten if it was someone's first time eating it
             // Manager must update count and replace cupcake
@@ -72,22 +72,22 @@ void checkCupcake()
     }
 }
 
-void visitLabyrinth(int currentThreadID)
+void visitLabyrinth(int currentGuest)
 {
     while (numGuestsPicked < NUM_GUESTS)
     {
         mutex.lock();
 
         // If cupcake is there and current guest has not eaten it before, eat it
-        if (activeThreadID == currentThreadID && isCupcakeThere && !guestsPicked[currentThreadID])
+        if (currentGuest == guestInLabyrinth && isCupcakeThere && !guestsPicked[currentGuest])
         {
             // Simulate visiting the labyrinth (even if for short amount of time)
             int visitingTime = generateRandomNumber(10, 50);
             std::this_thread::sleep_for(std::chrono::milliseconds(visitingTime));
 
-            guestsPicked[activeThreadID] = true;
+            guestsPicked[currentGuest] = true;
             isCupcakeThere = false;
-            std::cout << "Guest " << currentThreadID << " ate the cupcake" << std::endl;
+            std::cout << "Guest " << currentGuest << " ate the cupcake" << std::endl;
         }
 
         mutex.unlock();
@@ -102,13 +102,13 @@ int main(void)
     std::vector<std::thread> threads(NUM_GUESTS);
 
     // Initialize chosen manager as the cupcake checker
-    std::cout << "Guest " << managerID << " is the manager" << std::endl;
-    threads[managerID] = std::thread(checkCupcake);
+    std::cout << "Guest " << manager << " is the manager" << std::endl;
+    threads[manager] = std::thread(checkCupcake);
 
     // Every other thread/guest will be a normal visitor
     for (int i = 0; i < NUM_GUESTS; i++)
     {
-        if (i == managerID)
+        if (i == manager)
         {
             continue;
         }
@@ -118,7 +118,7 @@ int main(void)
     // Keep choosing new people until everyone has been chosen
     while (numGuestsPicked < NUM_GUESTS)
     {
-        activeThreadID = generateRandomNumber(0, NUM_GUESTS - 1);
+        guestInLabyrinth = generateRandomNumber(0, NUM_GUESTS - 1);
     }
 
     // Wait for all threads to finish

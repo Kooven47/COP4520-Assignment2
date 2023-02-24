@@ -21,7 +21,7 @@ bool isRoomAvailable = true;
 std::mutex mutex;
 
 // Current guest in the room
-int activeThreadID = generateRandomNumber(0, NUM_GUESTS - 1);
+int guestInRoom = generateRandomNumber(0, NUM_GUESTS - 1);
 
 // Random integer generator, inclusive of min and max
 // Used for randomly choosing next guest
@@ -34,13 +34,13 @@ int generateRandomNumber(int min, int max)
     return dist(mt);
 }
 
-void viewVase(int currentThreadID)
+void viewVase(int currentGuest)
 {
     while (numGuestsViewed < NUM_GUESTS)
     {
         mutex.lock();
 
-        if (activeThreadID == currentThreadID && isRoomAvailable)
+        if (currentGuest == guestInRoom && isRoomAvailable)
         {
             isRoomAvailable = false;
 
@@ -51,11 +51,11 @@ void viewVase(int currentThreadID)
             isRoomAvailable = true;
 
             // Check if this is the first time the guest has viewed the vase
-            if (!guestsPicked[currentThreadID])
+            if (!guestsPicked[currentGuest])
             {
                 numGuestsViewed++;
-                guestsPicked[currentThreadID] = true;
-                std::cout << "Guest " << currentThreadID << " viewed the vase for the first time" << std::endl;
+                guestsPicked[currentGuest] = true;
+                std::cout << "Guest " << currentGuest << " viewed the vase for the first time" << std::endl;
             }
         }
 
@@ -78,7 +78,7 @@ int main(void)
     // Keep choosing new people until everyone has been chosen
     while (numGuestsViewed < NUM_GUESTS)
     {
-        activeThreadID = generateRandomNumber(0, NUM_GUESTS - 1);
+        guestInRoom = generateRandomNumber(0, NUM_GUESTS - 1);
     }
     
     // Wait for all threads to finish
